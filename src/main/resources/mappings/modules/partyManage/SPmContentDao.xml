@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.partyManage.dao.SPmContentDao">
+    
+	<sql id="sPmContentColumns">
+		a.id AS "id",
+		a.me_cont AS "meCont",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.pro_id AS "proId"
+	</sql>
+	
+	<sql id="sPmContentJoins">
+	</sql>
+    
+	<select id="get" resultType="SPmContent">
+		SELECT 
+			<include refid="sPmContentColumns"/>
+		FROM s_pm_content a
+		<include refid="sPmContentJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SPmContent">
+		SELECT 
+			<include refid="sPmContentColumns"/>
+		FROM s_pm_content a
+		<include refid="sPmContentJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SPmContent">
+		SELECT 
+			<include refid="sPmContentColumns"/>
+		FROM s_pm_content a
+		<include refid="sPmContentJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="getByproId" resultType="SPmContent">
+		SELECT
+		<include refid="sPmContentColumns"/>
+		FROM s_pm_content a
+		WHERE a.pro_id = #{proId}
+		AND a.del_flag = '0'
+	</select>
+	
+	
+	<insert id="insert">
+		INSERT INTO s_pm_content(
+			id,
+			me_cont,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			pro_id
+		) VALUES (
+			#{id},
+			#{meCont},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{proId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE s_pm_content SET 	
+			me_cont = #{meCont},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			pro_id = #{proId}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE s_pm_content SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

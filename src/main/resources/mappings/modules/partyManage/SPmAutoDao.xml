@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.partyManage.dao.SPmAutoDao">
+    
+	<sql id="sPmAutoColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.upload AS "upload",
+		a.pro_id AS "proId"
+	</sql>
+	
+	<sql id="sPmAutoJoins">
+	</sql>
+    
+	<select id="get" resultType="SPmAuto">
+		SELECT 
+			<include refid="sPmAutoColumns"/>
+		FROM s_pm_auto a
+		<include refid="sPmAutoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SPmAuto">
+		SELECT 
+			<include refid="sPmAutoColumns"/>
+		FROM s_pm_auto a
+		<include refid="sPmAutoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SPmAuto">
+		SELECT 
+			<include refid="sPmAutoColumns"/>
+		FROM s_pm_auto a
+		<include refid="sPmAutoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="getByproId" resultType="SPmAuto">
+		SELECT
+		<include refid="sPmAutoColumns"/>
+		FROM s_pm_auto a
+		WHERE a.pro_id = #{proId}
+		AND a.del_flag = '0'
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO s_pm_auto(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			upload,
+			pro_id
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{upload},
+			#{proId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE s_pm_auto SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			upload = #{upload},
+			pro_id = #{proId}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE s_pm_auto SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.partyManage.dao.SPmJszwDao">
+    
+	<sql id="sPmJszwColumns">
+		a.id AS "id",
+		a.pro_qua AS "proQua",
+		a.date_elig AS "dateElig",
+		a.tech_pos AS "techPos",
+		a.appo_start AS "appoStart",
+		a.date_ter AS "dateTer",
+		a.input_man AS "inputMan",
+		a.entry_time AS "entryTime",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.pro_id AS "proId"
+	</sql>
+	
+	<sql id="sPmJszwJoins">
+	</sql>
+    
+	<select id="get" resultType="SPmJszw">
+		SELECT 
+			<include refid="sPmJszwColumns"/>
+		FROM s_pm_jszw a
+		<include refid="sPmJszwJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SPmJszw">
+		SELECT 
+			<include refid="sPmJszwColumns"/>
+		FROM s_pm_jszw a
+		<include refid="sPmJszwJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findLists" resultType="SPmJszw">
+		SELECT
+		<include refid="sPmJszwColumns"/>
+		FROM s_pm_jszw a
+		<include refid="sPmJszwJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			AND a.pro_id = #{proId}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SPmJszw">
+		SELECT 
+			<include refid="sPmJszwColumns"/>
+		FROM s_pm_jszw a
+		<include refid="sPmJszwJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO s_pm_jszw(
+			id,
+			pro_qua,
+			date_elig,
+			tech_pos,
+			appo_start,
+			date_ter,
+			input_man,
+			entry_time,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			pro_id
+		) VALUES (
+			#{id},
+			#{proQua},
+			#{dateElig},
+			#{techPos},
+			#{appoStart},
+			#{dateTer},
+			#{inputMan},
+			#{entryTime},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{proId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE s_pm_jszw SET 	
+			pro_qua = #{proQua},
+			date_elig = #{dateElig},
+			tech_pos = #{techPos},
+			appo_start = #{appoStart},
+			date_ter = #{dateTer},
+			input_man = #{inputMan},
+			entry_time = #{entryTime},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			pro_id = #{proId}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE s_pm_jszw SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

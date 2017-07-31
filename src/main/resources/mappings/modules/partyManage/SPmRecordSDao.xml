@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.partyManage.dao.SPmRecordSDao">
+	
+	<sql id="recordColumns">
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.id AS "id",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		node_no as "nodeNo", 
+		node_type as "nodeType"
+	</sql>
+	
+	<select id="get" resultType="SPmRecordS">
+	SELECT
+		<include refid="recordColumns"/>
+	FROM s_pm_record_s a
+	WHERE a.NODE_NO = #{nodeNo}
+	</select>
+	<select id="getRecursionList" resultType="java.util.HashMap">
+	select t.id as "officeId", d.c3 as "officeType"
+  from SYS_OFFICE t， sys_office_ext d
+ where t.id = d.C2
+ start with t.id = #{1}
+connect by t.id = prior t.PARENT_ID
+	</select>
+	
+</mapper>

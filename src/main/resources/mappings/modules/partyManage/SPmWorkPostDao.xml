@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.partyManage.dao.SPmWorkPostDao">
+    
+	<sql id="sPmWorkPostColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.update_by AS "updateBy.id",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.work_post AS "workPost",
+		a.begin_time AS "beginTime",
+		a.end_time AS "endTime",
+		a.person_identity AS "personIdentity",
+		a.first_condition AS "firstCondition",
+		a.new_stratum AS "newStratum",
+		a.operator AS "operator",
+		a.operator_time AS "operatorTime",
+		a.operation AS "operation",
+		a.pro_id AS "proId"
+	</sql>
+	
+	<sql id="sPmWorkPostJoins">
+	</sql>
+    
+	<select id="get" resultType="SPmWorkPost">
+		SELECT 
+			<include refid="sPmWorkPostColumns"/>
+		FROM s_pm_work_post a
+		<include refid="sPmWorkPostJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SPmWorkPost">
+		SELECT 
+			<include refid="sPmWorkPostColumns"/>
+		FROM s_pm_work_post a
+		<include refid="sPmWorkPostJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findLists" resultType="SPmWorkPost">
+		SELECT
+		<include refid="sPmWorkPostColumns"/>
+		FROM s_pm_work_post a
+		<include refid="sPmWorkPostJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			AND a.pro_id = #{proId}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SPmWorkPost">
+		SELECT 
+			<include refid="sPmWorkPostColumns"/>
+		FROM s_pm_work_post a
+		<include refid="sPmWorkPostJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO s_pm_work_post(
+			id,
+			create_by,
+			update_by,
+			create_date,
+			update_date,
+			remarks,
+			del_flag,
+			work_post,
+			begin_time,
+			end_time,
+			person_identity,
+			first_condition,
+			new_stratum,
+			operator,
+			operator_time,
+			operation,
+			pro_id
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{updateBy.id},
+			#{createDate},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{workPost},
+			#{beginTime},
+			#{endTime},
+			#{personIdentity},
+			#{firstCondition},
+			#{newStratum},
+			#{operator},
+			#{operatorTime},
+			#{operation},
+			#{proId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE s_pm_work_post SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			work_post = #{workPost},
+			begin_time = #{beginTime},
+			end_time = #{endTime},
+			person_identity = #{personIdentity},
+			first_condition = #{firstCondition},
+			new_stratum = #{newStratum},
+			operator = #{operator},
+			operator_time = #{operatorTime},
+			operation = #{operation},
+			pro_id = #{proId}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE s_pm_work_post SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

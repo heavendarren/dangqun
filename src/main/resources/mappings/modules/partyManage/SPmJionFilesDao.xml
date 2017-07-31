@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.partyManage.dao.SPmJionFilesDao">
+    
+	<sql id="sPmJionFilesColumns">
+		a.id AS "id",
+		a.form_id AS "formId",
+		a.file_url AS "fileUrl",
+		a.file_name AS "fileName",
+		a.uploader AS "uploader",
+		a.upload_time AS "uploadTime",
+		a.create_by AS "createBy.id",
+		a.update_by AS "updateBy.id",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.form_name AS "formName"
+	</sql>
+	
+	<sql id="sPmJionFilesJoins">
+	</sql>
+    
+	<select id="get" resultType="SPmJionFiles">
+		SELECT 
+			<include refid="sPmJionFilesColumns"/>
+		FROM s_pm_jion_files a
+		<include refid="sPmJionFilesJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="getByformId" resultType="SPmJionFiles">
+		SELECT
+		<include refid="sPmJionFilesColumns"/>
+		FROM s_pm_jion_files a
+		<include refid="sPmJionFilesJoins"/>
+		WHERE a.form_id = #{formId}
+		AND a.del_flag = '0'
+	</select>
+
+	<select id="findLists" resultType="SPmJionFiles">
+		SELECT
+		<include refid="sPmJionFilesColumns"/>
+		FROM s_pm_jion_files a
+		<include refid="sPmJionFilesJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			AND a.form_id = #{formId}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findList" resultType="SPmJionFiles">
+		SELECT 
+			<include refid="sPmJionFilesColumns"/>
+		FROM s_pm_jion_files a
+		<include refid="sPmJionFilesJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SPmJionFiles">
+		SELECT 
+			<include refid="sPmJionFilesColumns"/>
+		FROM s_pm_jion_files a
+		<include refid="sPmJionFilesJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO s_pm_jion_files(
+			id,
+			form_id,
+			file_url,
+			file_name,
+			uploader,
+			upload_time,
+			create_by,
+			update_by,
+			create_date,
+			update_date,
+			remarks,
+			del_flag,
+			form_name
+		) VALUES (
+			#{id},
+			#{formId},
+			#{fileUrl},
+			#{fileName},
+			#{uploader},
+			#{uploadTime},
+			#{createBy.id},
+			#{updateBy.id},
+			#{createDate},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{formName}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE s_pm_jion_files SET 	
+			form_id = #{formId},
+			file_url = #{fileUrl},
+			file_name = #{fileName},
+			uploader = #{uploader},
+			upload_time = #{uploadTime},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			form_name = #{formName}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE s_pm_jion_files SET 
+			del_flag = '1'
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

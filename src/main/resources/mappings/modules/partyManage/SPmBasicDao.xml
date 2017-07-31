@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.partyManage.dao.SPmBasicDao">
+
+	<sql id="sPmBasicColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.update_by AS "updateBy.id",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.name AS "name",
+		a.old_name AS "oldName",
+		a.idcard AS "idcard",
+		a.registered_residence AS "registeredResidence",
+		a.sex AS "sex",
+		a.nation AS "nation",
+		a.origin_place AS "originPlace",
+		a.birth_place AS "birthPlace",
+		a.health AS "health",
+		a.family AS "family",
+		a.work_place AS "workPlace",
+		a.work_time AS "workTime",
+		a.person_identity AS "personIdentity",
+		a.migrant_workers AS "migrantWorkers",
+		a.first_condition AS "firstCondition",
+		a.new_stratum AS "newStratum",
+		a.democratic_parties AS "democraticParties",
+		a.education AS "education",
+		a.academic_degree AS "academicDegree",
+		a.major AS "major",
+		a.graduated_university AS "graduatedUniversity",
+		a.technical_post AS "technicalPost",
+		a.job_level AS "jobLevel",
+		a.phone_number AS "phoneNumber",
+		a.retirement_time AS "retirementTime",
+		a.departure_time AS "departureTime",
+		a.leave_reason AS "leaveReason",
+		a.operator AS "operator",
+		a.operator_time AS "operatorTime",
+		a.pro_id AS "proId",
+		a.birth_time AS "birthTime"
+	</sql>
+
+	<sql id="sPmBasicJoins">
+	</sql>
+
+	<select id="get" resultType="SPmBasic">
+		SELECT
+			<include refid="sPmBasicColumns"/>
+		FROM s_pm_basic a
+		<include refid="sPmBasicJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="getByproId" resultType="SPmBasic">
+		SELECT
+		<include refid="sPmBasicColumns"/>
+		FROM s_pm_basic a
+		WHERE a.pro_id = #{proId}
+		AND a.del_flag = '0'
+	</select>
+
+	<select id="findList" resultType="SPmBasic">
+		SELECT
+			<include refid="sPmBasicColumns"/>
+		FROM s_pm_basic a
+		<include refid="sPmBasicJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="name != null and name != ''">
+				AND a.name LIKE
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="SPmBasic">
+		SELECT
+			<include refid="sPmBasicColumns"/>
+		FROM s_pm_basic a
+		<include refid="sPmBasicJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO s_pm_basic(
+			id,
+			create_by,
+			update_by,
+			create_date,
+			update_date,
+			remarks,
+			del_flag,
+			name,
+			old_name,
+			idcard,
+			registered_residence,
+			sex,
+			nation,
+			origin_place,
+			birth_place,
+			health,
+			family,
+			work_place,
+			work_time,
+			person_identity,
+			migrant_workers,
+			first_condition,
+			new_stratum,
+			democratic_parties,
+			education,
+			academic_degree,
+			major,
+			graduated_university,
+			technical_post,
+			job_level,
+			phone_number,
+			retirement_time,
+			departure_time,
+			leave_reason,
+			operator,
+			operator_time,
+			pro_id,
+			birth_time
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{updateBy.id},
+			#{createDate},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{name},
+			#{oldName},
+			#{idcard},
+			#{registeredResidence},
+			#{sex},
+			#{nation},
+			#{originPlace},
+			#{birthPlace},
+			#{health},
+			#{family},
+			#{workPlace},
+			#{workTime},
+			#{personIdentity},
+			#{migrantWorkers},
+			#{firstCondition},
+			#{newStratum},
+			#{democraticParties},
+			#{education},
+			#{academicDegree},
+			#{major},
+			#{graduatedUniversity},
+			#{technicalPost},
+			#{jobLevel},
+			#{phoneNumber},
+			#{retirementTime},
+			#{departureTime},
+			#{leaveReason},
+			#{operator},
+			#{operatorTime},
+			#{proId},
+			#{birthTime}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE s_pm_basic SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			name = #{name},
+			old_name = #{oldName},
+			idcard = #{idcard},
+			registered_residence = #{registeredResidence},
+			sex = #{sex},
+			nation = #{nation},
+			origin_place = #{originPlace},
+			birth_place = #{birthPlace},
+			health = #{health},
+			family = #{family},
+			work_place = #{workPlace},
+			work_time = #{workTime},
+			person_identity = #{personIdentity},
+			migrant_workers = #{migrantWorkers},
+			first_condition = #{firstCondition},
+			new_stratum = #{newStratum},
+			democratic_parties = #{democraticParties},
+			education = #{education},
+			academic_degree = #{academicDegree},
+			major = #{major},
+			graduated_university = #{graduatedUniversity},
+			technical_post = #{technicalPost},
+			job_level = #{jobLevel},
+			phone_number = #{phoneNumber},
+			retirement_time = #{retirementTime},
+			departure_time = #{departureTime},
+			leave_reason = #{leaveReason},
+			operator = #{operator},
+			operator_time = #{operatorTime},
+			pro_id = #{proId}
+		WHERE id = #{id}
+	</update>
+
+	<update id="delete">
+		UPDATE s_pm_basic SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+</mapper>

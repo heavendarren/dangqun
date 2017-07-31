@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context" xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+		http://www.springframework.org/schema/context  http://www.springframework.org/schema/context/spring-context-4.1.xsd"
+       default-lazy-init="true">
+
+    <description>bean Configuration</description>
+    <!-- docx bean -->
+    <bean id="docxMapping" class="java.util.HashMap">
+        <constructor-arg>
+            <map>
+                <entry>
+                    <key>
+                        <value><![CDATA[test]]></value>
+                    </key>
+                    <value><![CDATA[test.docx]]></value>
+                </entry>
+                <entry>
+                    <key>
+                        <value><![CDATA[sPmPrepPartyPublicDocx]]></value>
+                    </key>
+                    <value><![CDATA[sPmPrepPartyPublic.docx]]></value>
+                </entry>
+                <entry>
+                    <key>
+                        <value><![CDATA[sPmPrepPartyPublicSituationDocx]]></value>
+                    </key>
+                    <value><![CDATA[sPmPrepPartyPublicSituation.docx]]></value>
+                </entry>
+                <entry>
+                    <key>
+                        <value><![CDATA[sPmPrepPartyRecordDocx]]></value>
+                    </key>
+                    <value><![CDATA[sPmPrepPartyRecord.docx]]></value>
+                </entry>
+                <entry>
+                    <key>
+                        <value><![CDATA[sPmTermTrainDocx]]></value>
+                    </key>
+                    <value><![CDATA[termTrain.docx]]></value>
+                </entry>
+                <entry>
+                    <key>
+                        <value><![CDATA[sPmContactSettingDocx]]></value>
+                    </key>
+                    <value><![CDATA[contactSetting.docx]]></value>
+                </entry>
+                <entry>
+                    <key>
+                        <value><![CDATA[sPmMrsDocx]]></value>
+                    </key>
+                    <value><![CDATA[sPmMrs.docx]]></value>
+                </entry>
+                <entry>
+                    <key>
+                        <value><![CDATA[sPmPmsDocx]]></value>
+                    </key>
+                    <value><![CDATA[sPmPms.docx]]></value>
+                </entry>
+                <entry>
+                    <key>
+                        <value><![CDATA[sPmPrfDocx]]></value>
+                    </key>
+                    <value><![CDATA[sPmPrf.docx]]></value>
+                </entry>
+                
+                 <entry>
+                    <key>
+                        <value><![CDATA[sPmActiviDocx]]></value>
+                    </key>
+                    <value><![CDATA[sPmActivi.docx]]></value>
+                </entry>
+                
+                <entry>
+                    <key>
+                        <value><![CDATA[sPmCheckDocx]]></value>
+                    </key>
+                    <value><![CDATA[sPmCheck.docx]]></value>
+                </entry>
+                
+                <entry>
+                    <key>
+                        <value><![CDATA[sPmReviewDocx]]></value>
+                    </key>
+                    <value><![CDATA[sPmReview.docx]]></value>
+                </entry>
+                
+                <entry>
+                    <key>
+                        <value><![CDATA[sPmPmsSDocx]]></value>
+                    </key>
+                    <value><![CDATA[sPmPmsS.docx]]></value>
+                </entry>
+                
+                <entry>
+                    <key>
+                        <value><![CDATA[sPmProbationaryDocx]]></value>
+                    </key>
+                    <value><![CDATA[sPmProbationary.docx]]></value>
+                </entry>
+                
+                 <entry>
+                    <key>
+                        <value><![CDATA[sPmParthMenberDocx]]></value>
+                    </key>
+                    <value><![CDATA[parthMenber.docx]]></value>
+                </entry>
+                  <!-- 确定入党介绍人表.docx文件下载 -->
+                <entry>
+                    <key>
+                        <value><![CDATA[sPmParthMenberDocx]]></value>
+                    </key>
+                    <value><![CDATA[parthMenber.docx]]></value>
+                </entry>
+                  <!-- 入党介绍人和党小组意见表.docx文件下载 -->
+                <entry>
+                    <key>
+                        <value><![CDATA[sPmIntroduceOpinionDocx]]></value>
+                    </key>
+                    <value><![CDATA[introduceOpinion.docx]]></value>
+                </entry>
+                 <!-- 征求党员意见会议纪要表.docx文件下载 -->
+                <entry>
+                    <key>
+                        <value><![CDATA[sPmMeetingMinutesDocx]]></value>
+                    </key>
+                    <value><![CDATA[MeetingMinutes.docx]]></value>
+                </entry>
+                <!-- 征求群众意见会议纪要表.docx文件下载 -->
+                <entry>
+                    <key>
+                        <value><![CDATA[sPmMassOpinionDocx]]></value>
+                    </key>
+                    <value><![CDATA[MassOpinion.docx]]></value>
+                </entry>
+                <!-- 按期转为中共正式党员报告表.docx文件下载 -->
+                <entry>
+                    <key>
+                        <value><![CDATA[sPmFormalMemberDocx]]></value>
+                    </key>
+                    <value><![CDATA[FormalMember.docx]]></value>
+                </entry>
+                <!-- 转正工作预审表.docx文件下载 -->
+                <entry>
+                    <key>
+                        <value><![CDATA[sPmPositivePreDocx]]></value>
+                    </key>
+                    <value><![CDATA[PositivePre.docx]]></value>
+                </entry>
+                <!-- 转正审查审核表.docx文件下载 -->
+                <entry>
+                    <key>
+                        <value><![CDATA[sPmAuditChecklistDocx]]></value>
+                    </key>
+                    <value><![CDATA[AuditChecklist.docx]]></value>
+                </entry>
+                
+            </map>
+        </constructor-arg>
+    </bean>
+</beans>

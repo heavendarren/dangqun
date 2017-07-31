@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.partyManage.dao.SPmOpinionDao">
+    
+	<sql id="sPmOpinionColumns">
+		a.id AS "id",
+		a.start_time AS "startTime",
+		a.place AS "place",
+		a.host_peo AS "hostPeo",
+		a.note_taker AS "noteTaker",
+		a.num_arr AS "numArr",
+		a.num_act AS "numAct",
+		a.name_part AS "namePart",
+		a.absentee AS "absentee",
+		a.content AS "content",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_update AS "updateUpdate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.pro_id AS "proId"
+	</sql>
+	
+	<sql id="sPmOpinionJoins">
+	</sql>
+    
+	<select id="get" resultType="SPmOpinion">
+		SELECT 
+			<include refid="sPmOpinionColumns"/>
+		FROM s_pm_opinion a
+		<include refid="sPmOpinionJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SPmOpinion">
+		SELECT 
+			<include refid="sPmOpinionColumns"/>
+		FROM s_pm_opinion a
+		<include refid="sPmOpinionJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SPmOpinion">
+		SELECT 
+			<include refid="sPmOpinionColumns"/>
+		FROM s_pm_opinion a
+		<include refid="sPmOpinionJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="getByproId" resultType="SPmOpinion">
+		SELECT
+		<include refid="sPmOpinionColumns"/>
+		FROM s_pm_opinion a
+		WHERE a.pro_id = #{proId}
+		AND a.del_flag = '0'
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO s_pm_opinion(
+			id,
+			start_time,
+			place,
+			host_peo,
+			note_taker,
+			num_arr,
+			num_act,
+			name_part,
+			absentee,
+			content,
+			create_by,
+			create_date,
+			update_by,
+			update_update,
+			remarks,
+			del_flag,
+			pro_id
+		) VALUES (
+			#{id},
+			#{startTime},
+			#{place},
+			#{hostPeo},
+			#{noteTaker},
+			#{numArr},
+			#{numAct},
+			#{namePart},
+			#{absentee},
+			#{content},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateUpdate},
+			#{remarks},
+			#{delFlag},
+			#{proId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE s_pm_opinion SET 	
+			start_time = #{startTime},
+			place = #{place},
+			host_peo = #{hostPeo},
+			note_taker = #{noteTaker},
+			num_arr = #{numArr},
+			num_act = #{numAct},
+			name_part = #{namePart},
+			absentee = #{absentee},
+			content = #{content},
+			update_by = #{updateBy.id},
+			update_update = #{updateUpdate},
+			remarks = #{remarks},
+			pro_id = #{proId}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE s_pm_opinion SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

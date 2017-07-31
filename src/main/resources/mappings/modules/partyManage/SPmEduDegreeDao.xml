@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.partyManage.dao.SPmEduDegreeDao">
+    
+	<sql id="sPmEduDegreeColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.update_by AS "updateBy.id",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.education AS "education",
+		a.entrance_date AS "entranceDate",
+		a.graduated_university AS "graduatedUniversity",
+		a.education_type AS "educationType",
+		a.academic_degree AS "academicDegree",
+		a.degree_grant_date AS "degreeGrantDate",
+		a.graduation_date AS "graduationDate",
+		a.major AS "major",
+		a.operation AS "operation",
+		a.operator AS "operator",
+		a.operator_time AS "operatorTime",
+		a.pro_id AS "proId"
+	</sql>
+	
+	<sql id="sPmEduDegreeJoins">
+	</sql>
+    
+	<select id="get" resultType="SPmEduDegree">
+		SELECT 
+			<include refid="sPmEduDegreeColumns"/>
+		FROM s_pm_edu_degree a
+		<include refid="sPmEduDegreeJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SPmEduDegree">
+		SELECT 
+			<include refid="sPmEduDegreeColumns"/>
+		FROM s_pm_edu_degree a
+		<include refid="sPmEduDegreeJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findLists" resultType="SPmEduDegree">
+		SELECT
+		<include refid="sPmEduDegreeColumns"/>
+		FROM s_pm_edu_degree a
+		<include refid="sPmEduDegreeJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			AND a.pro_id = #{proId}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SPmEduDegree">
+		SELECT 
+			<include refid="sPmEduDegreeColumns"/>
+		FROM s_pm_edu_degree a
+		<include refid="sPmEduDegreeJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO s_pm_edu_degree(
+			id,
+			create_by,
+			update_by,
+			create_date,
+			update_date,
+			remarks,
+			del_flag,
+			education,
+			entrance_date,
+			graduated_university,
+			education_type,
+			academic_degree,
+			degree_grant_date,
+			graduation_date,
+			major,
+			operation,
+			operator,
+			operator_time,
+			pro_id
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{updateBy.id},
+			#{createDate},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{education},
+			#{entranceDate},
+			#{graduatedUniversity},
+			#{educationType},
+			#{academicDegree},
+			#{degreeGrantDate},
+			#{graduationDate},
+			#{major},
+			#{operation},
+			#{operator},
+			#{operatorTime},
+			#{proId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE s_pm_edu_degree SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			education = #{education},
+			entrance_date = #{entranceDate},
+			graduated_university = #{graduatedUniversity},
+			education_type = #{educationType},
+			academic_degree = #{academicDegree},
+			degree_grant_date = #{degreeGrantDate},
+			graduation_date = #{graduationDate},
+			major = #{major},
+			operation = #{operation},
+			operator = #{operator},
+			operator_time = #{operatorTime},
+			pro_id = #{proId}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE s_pm_edu_degree SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

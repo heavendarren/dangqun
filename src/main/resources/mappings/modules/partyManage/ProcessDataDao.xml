@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.partyManage.dao.ProcessDataDao">
+	<resultMap type="com.thinkgem.jeesite.modules.partyManage.entity.ProcessData" id="pdMap">
+		<id property="id" column="id"/>
+		<result property="stage" column="stage"/>
+		<result property="node" column="node"/>
+		<result property="status" column="status"/>
+		<result property="appID" column="app_id"/>
+		<result property="createby" column="create_by"/>
+		<result property="createDate" column="create_Date"/>
+		<result property="updateby" column="update_by"/>
+		<result property="updateDate" column="update_Date"/>
+		<result property="remarks" column="remarks"/>
+		<result property="delflag" column="del_flag"/>
+		<result property="fillflag" column="fill_flag"/>
+		<result property="submitflag" column="submit_flag"/>
+		<result property="checkflag" column="checkflag"/>
+		<result property="checkDate" column="checkDate"/>
+		<result property="checkdel" column="checkdel"/>
+		<result property="childNum" column="childnum"/>
+		<result property="officID" column="office_id"/>
+		<result property="roleID" column="role_id"/>
+		<result property="makeupflag" column="makeup_flag"/>
+		<result property="officeName" column="officeName"/>
+	</resultMap>
+	
+	<sql id="pdColumns">
+		a.id, 
+		a.stage, 
+		a.node,
+		a.status, 
+		a.app_id, 
+		a.create_by, 
+		a.create_Date, 
+		a.update_by,
+		a.update_Date, 
+		a.remarks,
+		a.del_flag,
+		a.fill_flag,
+		a.submit_flag,
+		a.childnum,
+		a.office_id,
+		a.role_id,
+		a.makeup_flag
+	</sql>
+	
+	<select id="findByAppID" resultMap="pdMap">
+		select
+		<include refid="pdColumns"/>
+		FROM s_pm_process_data a
+		WHERE a.app_id = #{0}
+		AND a.status = #{1}
+		AND a.del_flag = '0'
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO s_pm_process_data(
+			id, 
+			stage, 
+			node,
+			status, 
+			app_id, 
+			create_by, 
+			create_Date, 
+			update_by,
+			update_Date, 
+			remarks,
+			del_flag,
+			fill_flag,
+			submit_flag,
+			childnum,
+			office_id,
+			role_id,
+			makeup_flag
+		) VALUES (
+			#{id}, 
+			#{stage}, 
+			#{node},
+			#{status}, 
+			#{appID},  
+			#{createby}, 
+			#{createDate}, 
+			#{updateby},
+			#{updateDate}, 
+			#{remarks},
+			#{delflag},
+			#{fillflag},
+			#{submitflag},
+			#{childNum},
+			#{officID},
+			#{roleID},
+			#{makeupflag}
+		)
+	</insert>
+	
+	<select id="findlist" resultMap="pdMap">
+		select DISTINCT 
+		l.checkdate AS "checkDate",
+		l.checkresult AS "checkflag",
+		l.del_flag AS "checkdel",
+		p.name AS "officeName",
+		<include refid="pdColumns"/>
+		FROM s_pm_process_data a
+  		LEFT JOIN (select * from s_pm_checklog where del_flag = '0') l
+   		ON l.checknode_id = a.id
+  		LEFT JOIN sys_office p
+   		ON p.id = a.office_id
+		WHERE a.app_id = #{0}
+		AND a.del_flag = '0'
+		ORDER BY a.node ASC
+	</select>
+	
+	<select id="findByNode" resultMap="pdMap">
+		select
+		<include refid="pdColumns"/>
+		FROM s_pm_process_data a
+		WHERE a.app_id = #{0}
+		AND a.node = #{1}
+		AND a.del_flag = '0'
+	</select>
+	
+	<select id="findByID" resultMap="pdMap">
+		select
+		<include refid="pdColumns"/>
+		FROM s_pm_process_data a
+		WHERE a.id = #{0}
+		AND a.del_flag = '0'
+	</select>
+	
+	<update id="update">
+		UPDATE s_pm_process_data SET
+			stage=#{stage}, 
+			node=#{node},
+			status=#{status}, 
+			app_id=#{appID}, 
+			create_by=#{createby}, 
+			create_Date=#{createDate}, 
+			update_by=#{updateby},
+			update_Date=#{updateDate}, 
+			remarks=#{remarks},
+			del_flag=#{delflag},
+			fill_flag=#{fillflag},
+			submit_flag=#{submitflag},
+			childnum=#{childNum},
+			office_id=#{officID},
+			role_id=#{roleID},
+			makeup_flag=#{makeupflag}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

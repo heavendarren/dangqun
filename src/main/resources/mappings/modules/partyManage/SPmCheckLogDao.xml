@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.partyManage.dao.SPmCheckLogDao">
+	<resultMap type="com.thinkgem.jeesite.modules.partyManage.entity.SPmCheckLog" id="clMap">
+		<id property="id" column="id"/>
+		<result property="recordID" column="record_id"/>
+		<result property="recordName" column="record_name"/>
+		<result property="checkNodeID" column="checknode_id"/>
+		<result property="checkID" column="check_id"/>
+		<result property="checkName" column="checkname"/>
+		<result property="checkResult" column="checkresult"/>
+		<result property="checkDate" column="checkdate"/>
+		<result property="backreason" column="backreason"/>
+		<result property="delFlag" column="del_flag"/>
+	</resultMap>
+	
+	<sql id="clColumns">
+		a.id,
+		a.record_id,
+		a.record_name,
+		a.checknode_id,
+		a.check_id,
+		a.checkname,
+		a.checkresult,
+		a.checkdate,
+		a.backreason,
+		a.del_flag
+	</sql>
+	
+	<insert id="insert">
+		INSERT INTO s_pm_checklog(
+			id,
+			record_id,
+			record_name,
+			checknode_id,
+			check_id,
+			checkname,
+			checkresult,
+			checkdate,
+			backreason,
+			del_flag
+		)VALUES(
+			#{id},
+			#{recordID},
+			#{recordName},
+			#{checkNodeID},
+			#{checkID},
+			#{checkName},
+			#{checkResult},
+			#{checkDate},
+			#{backreason},
+			#{delFlag}
+		)
+	</insert>
+	
+	<select id="findByIdNode" resultMap="clMap">
+		select
+		<include refid="clColumns"/>
+		FROM s_pm_checklog a
+		WHERE a.record_id = #{0}
+		AND a.checknode_id = #{1}
+		AND a.del_flag = '0'
+	</select>
+	
+	<update id="update">
+		UPDATE s_pm_checklog SET
+			record_id=#{recordID}, 
+			record_name=#{recordName},
+			checknode_id=#{checkNodeID}, 
+			check_id=#{checkID}, 
+			checkname=#{checkName}, 
+			checkresult=#{checkResult}, 
+			checkdate=#{checkDate},
+			backreason=#{backreason},
+			del_flag=#{delFlag}
+		WHERE id = #{id}
+	</update>
+</mapper>

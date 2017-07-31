@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.partyManage.dao.SPmContactSettingsDao">
+    
+	<sql id="sPmContactSettingsColumns">
+		a.id AS "id",
+		a.contact_num AS "contactNum",
+		a.name AS "name",
+		a.sex AS "sex",
+		a.origin_place AS "originPlace",
+		a.birth_time AS "birthTime",
+		a.nation AS "nation",
+		a.jion_time AS "jionTime",
+		a.education_degree AS "educationDegree",
+		a.party_branch AS "partyBranch",
+		a.post_place AS "postPlace",
+		a.person_resume AS "personResume",
+		a.create_by AS "createBy.id",
+		a.update_by AS "updateBy.id",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.pro_id AS "proId",
+		a.contact_id AS "contactId"
+	</sql>
+	
+	<sql id="sPmContactSettingsJoins">
+	</sql>
+    
+	<select id="get" resultType="SPmContactSettings">
+		SELECT 
+			<include refid="sPmContactSettingsColumns"/>
+		FROM s_pm_contact_settings a
+		<include refid="sPmContactSettingsJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="SPmContactSettings">
+		SELECT 
+			<include refid="sPmContactSettingsColumns"/>
+		FROM s_pm_contact_settings a
+		<include refid="sPmContactSettingsJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findLists" resultType="SPmContactSettings">
+		SELECT
+		<include refid="sPmContactSettingsColumns"/>
+		FROM s_pm_contact_settings a
+		<include refid="sPmContactSettingsJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			AND a.pro_id = #{proId}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="SPmContactSettings">
+		SELECT 
+			<include refid="sPmContactSettingsColumns"/>
+		FROM s_pm_contact_settings a
+		<include refid="sPmContactSettingsJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO s_pm_contact_settings(
+			id,
+			contact_num,
+			name,
+			sex,
+			origin_place,
+			birth_time,
+			nation,
+			jion_time,
+			education_degree,
+			party_branch,
+			post_place,
+			person_resume,
+			create_by,
+			update_by,
+			create_date,
+			update_date,
+			remarks,
+			del_flag,
+			pro_id
+		) VALUES (
+			#{id},
+			#{contactNum},
+			#{name},
+			#{sex},
+			#{originPlace},
+			#{birthTime},
+			#{nation},
+			#{jionTime},
+			#{educationDegree},
+			#{partyBranch},
+			#{postPlace},
+			#{personResume},
+			#{createBy.id},
+			#{updateBy.id},
+			#{createDate},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{proId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE s_pm_contact_settings SET 	
+			contact_num = #{contactNum},
+			name = #{name},
+			sex = #{sex},
+			origin_place = #{originPlace},
+			birth_time = #{birthTime},
+			nation = #{nation},
+			jion_time = #{jionTime},
+			education_degree = #{educationDegree},
+			party_branch = #{partyBranch},
+			post_place = #{postPlace},
+			person_resume = #{personResume},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			pro_id = #{proId}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE s_pm_contact_settings SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

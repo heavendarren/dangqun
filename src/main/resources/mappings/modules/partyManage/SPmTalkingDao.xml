@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.partyManage.dao.SPmTalkingDao">
+    
+	<sql id="sPmTalkingColumns">
+		a.id AS "id",
+		a.pro_id AS "proId",
+		a.talker AS "talker",
+		a.talk_time AS "talkTime",
+		a.talk_place AS "talkPlace",
+		a.talk_doc AS "talkDoc",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="sPmTalkingJoins">
+	</sql>
+    
+	<select id="get" resultType="SPmTalking">
+		SELECT 
+			<include refid="sPmTalkingColumns"/>
+		FROM s_pm_talking a
+		<include refid="sPmTalkingJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	
+	<select id="getByproId" resultType="SPmTalking">
+		SELECT
+		<include refid="sPmTalkingColumns"/>
+		FROM s_pm_talking a
+		WHERE a.pro_id = #{proId}
+		AND a.del_flag = '0'
+	</select>
+	
+	<select id="findList" resultType="SPmTalking">
+		SELECT 
+			<include refid="sPmTalkingColumns"/>
+		FROM s_pm_talking a
+		<include refid="sPmTalkingJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SPmTalking">
+		SELECT 
+			<include refid="sPmTalkingColumns"/>
+		FROM s_pm_talking a
+		<include refid="sPmTalkingJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO s_pm_talking(
+			id,
+			pro_id,
+			talker,
+			talk_time,
+			talk_place,
+			talk_doc,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{proId},
+			#{talker},
+			#{talkTime},
+			#{talkPlace},
+			#{talkDoc},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE s_pm_talking SET 	
+			pro_id = #{proId},
+			talker = #{talker},
+			talk_time = #{talkTime},
+			talk_place = #{talkPlace},
+			talk_doc = #{talkDoc},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE s_pm_talking SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

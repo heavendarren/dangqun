@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.sys.dao.CodeTreeDao">
+	
+	<select id="findListByType" resultType="CodeTree">
+		SELECT
+		a.CODE0203 as "code",
+		a.CODENO as "id",
+		a.CODE0211 as "canSelect",
+		nvl(substr(a.CODE0203, 0, length(a.CODE0203) - 3),'root')  AS "parent.id",
+		case when pid is null then '0' else '1' end as"leaf",
+ 		a.CODE0202 as "name"
+		FROM CODE02 a ,(
+		select distinct  nvl(substr(CODE0203, 0, length(CODE0203) - 3),'root')  pid from CODE02 
+		where  code0100 = #{0}
+		)b
+		WHERE a.code0100 = #{0}
+		and nvl(substr(a.CODE0203, 0, length(a.CODE0203) - 3),'root') = #{1}
+		and a.CODE0203=b.pid(+)
+		order by a.CODENO
+	</select>
+	
+</mapper>

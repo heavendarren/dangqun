@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.partyManage.dao.SPmActiviDao">
+    
+	<sql id="sPmActiviColumns">
+		a.id AS "id",
+		a.name AS "name",
+		a.sex AS "sex",
+		a.pla_of AS "plaOf",
+		a.date_birth AS "dateBirth",
+		a.nation AS "nation",
+		a.deg_edu AS "degEdu",
+		a.join_time AS "joinTime",
+		a.apca_time AS "apcaTime",
+		a.deter_time AS "deterTime",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.pro_id AS "proId"
+	</sql>
+	
+	<sql id="sPmActiviJoins">
+	</sql>
+    
+	<select id="get" resultType="SPmActivi">
+		SELECT 
+			<include refid="sPmActiviColumns"/>
+		FROM s_pm_activi a
+		<include refid="sPmActiviJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SPmActivi">
+		SELECT 
+			<include refid="sPmActiviColumns"/>
+		FROM s_pm_activi a
+		<include refid="sPmActiviJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SPmActivi">
+		SELECT 
+			<include refid="sPmActiviColumns"/>
+		FROM s_pm_activi a
+		<include refid="sPmActiviJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="getByproId" resultType="SPmActivi">
+		SELECT
+		<include refid="sPmActiviColumns"/>
+		FROM s_pm_activi a
+		WHERE a.pro_id = #{proId}
+		AND a.del_flag = '0'
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO s_pm_activi(
+			id,
+			name,
+			sex,
+			pla_of,
+			date_birth,
+			nation,
+			deg_edu,
+			join_time,
+			apca_time,
+			deter_time,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			pro_id
+		) VALUES (
+			#{id},
+			#{name},
+			#{sex},
+			#{plaOf},
+			#{dateBirth},
+			#{nation},
+			#{degEdu},
+			#{joinTime},
+			#{apcaTime},
+			#{deterTime},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{proId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE s_pm_activi SET 	
+			name = #{name},
+			sex = #{sex},
+			pla_of = #{plaOf},
+			date_birth = #{dateBirth},
+			nation = #{nation},
+			deg_edu = #{degEdu},
+			join_time = #{joinTime},
+			apca_time = #{apcaTime},
+			deter_time = #{deterTime},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			pro_id = #{proId}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE s_pm_activi SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

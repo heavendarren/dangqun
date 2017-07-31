@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.partyManage.dao.SPmOathDao">
+	<resultMap id="userResult" type="User">
+		<id property="id" column="id" />
+		<result property="name" column="name" />
+	</resultMap>
+    
+	<sql id="sPmOathColumns">
+		a.id AS "id",
+		a.pro_id AS "proId",
+		a.organ_name AS "organName",
+		a.act_time AS "actTime",
+		a.act_place AS "actPlace",
+		a.person_name AS "personName",
+		a.lnner_party AS "lnnerParty",
+		a.participant AS "participant",
+		a.act_sit AS "actSit",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	
+	
+	<sql id="sPmOathJoins">
+	</sql>
+    
+	<select id="get" resultType="SPmOath">
+		SELECT 
+			<include refid="sPmOathColumns"/>
+		FROM s_pm_oath a
+		<include refid="sPmOathJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="getByproId" resultType="SPmOath">
+		SELECT
+		<include refid="sPmOathColumns" />
+		FROM s_pm_oath a
+		<include refid="sPmOathJoins" />
+		WHERE a.pro_id = #{proId}
+		AND a.del_flag = '0'
+	</select>
+	
+	<select id="findUserList" resultType="User">
+		select * from sys_user
+	</select>
+	
+	<select id="findList" resultType="SPmOath">
+		SELECT 
+			<include refid="sPmOathColumns"/>
+		FROM s_pm_oath a
+		<include refid="sPmOathJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SPmOath">
+		SELECT 
+			<include refid="sPmOathColumns"/>
+		FROM s_pm_oath a
+		<include refid="sPmOathJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO s_pm_oath(
+			id,
+			pro_id,
+			organ_name,
+			act_time,
+			act_place,
+			person_name,
+			lnner_party,
+			participant,
+			act_sit,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{proId},
+			#{organName},
+			#{actTime},
+			#{actPlace},
+			#{personName},
+			#{lnnerParty},
+			#{participant},
+			#{actSit},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE s_pm_oath SET 	
+			pro_id = #{proId},
+			organ_name = #{organName},
+			act_time = #{actTime},
+			act_place = #{actPlace},
+			person_name = #{personName},
+			lnner_party = #{lnnerParty},
+			participant = #{participant},
+			act_sit = #{actSit},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE s_pm_oath SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

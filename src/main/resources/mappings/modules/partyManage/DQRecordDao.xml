@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.partyManage.dao.DQRecordDao">
+	<resultMap type="com.thinkgem.jeesite.modules.partyManage.entity.DQRecord" id="DQRecordMap">
+		<id property="id" column="id"/>
+		<result property="name" column="name"/>
+		<result property="orgID" column="orgID"/>
+		<result property="orgName" column="orgName"/>
+		<result property="applicationTime" column="applicationTime"/>
+		<result property="activistTime" column="activistTime"/>
+		<result property="objectTime" column="objectTime"/>
+		<result property="reserveTime" column="reserveTime"/>
+		<result property="formalTime" column="formalTime"/>
+		<result property="state" column="state"/>
+		<result property="stage" column="stage"/>
+		<result property="reviewerID" column="reviewer_id"/>
+		<result property="createby" column="create_by"/>
+		<result property="createDate" column="create_date"/>
+		<result property="updateDate" column="update_date"/>
+		<result property="updateby" column="update_by"/>
+		<result property="delflag" column="del_flag"/>
+		<result property="office.name" column="office.name" />
+		<result property="userID" column="user_id" />
+		<result property="makeupflag" column="makeup_flag"/>
+		<result property="endflag" column="end_flag"/>
+		<result property="makenode" column="makenode"/>
+	</resultMap>
+	
+	<sql id="recordColumns">
+		a.id,
+		a.name,
+		a.orgID,
+		a.applicationTime,
+		a.activistTime,
+		a.objectTime,
+		a.reserveTime,
+		a.formalTime,
+		a.stage,
+		a.reviewer_id,
+		a.create_by,
+		a.create_date,
+		a.update_by,
+		a.update_date,
+		a.del_flag,
+		a.user_id,
+		a.makeup_flag,
+		a.end_flag,
+		a.makenode
+	</sql>
+	
+	<select id="findByName" resultMap="DQRecordMap">
+	SELECT
+		<include refid="recordColumns"/>
+	FROM s_pm_record a
+	WHERE a.name = #{0}
+	AND a.orgID LIKE concat(#{1},'%')
+	AND a.del_flag = '0'
+	</select>
+	
+	<select id="findByRID" resultMap="DQRecordMap">
+	SELECT
+		<include refid="recordColumns"/>
+	FROM s_pm_record a
+	WHERE a.id = #{ID}
+	AND a.del_flag = '0'
+	</select>
+	
+	<select id="findByStage" resultMap="DQRecordMap">
+	SELECT
+		(select p.name from sys_office p where p.id = a.orgid) AS "orgName",
+		<include refid="recordColumns"/>
+	FROM s_pm_record a
+	LEFT JOIN sys_user u ON u.id = #{1}
+	LEFT JOIN sys_office p ON p.id = u.office_id
+	WHERE a.stage = #{0}
+	AND a.orgID LIKE concat(#{2},'%')
+	AND a.del_flag = '0'
+	AND u.del_flag = '0'
+	AND p.del_flag = '0'
+	</select>
+	
+	<select id="findByID" resultType="DQRecord">
+	SELECT
+		a.id,
+		a.name,
+		a.stage,
+		a.user_id,
+		p.name AS "office.name",
+		o.name AS "orgName"
+	FROM s_pm_record a
+	LEFT JOIN sys_role r ON r.id = a.reviewer_id
+	LEFT JOIN sys_office p ON p.id = r.office_id
+	LEFT JOIN sys_office o ON o.id = a.orgID
+	WHERE a.id = #{ID}
+	AND a.del_flag = '0'
+	AND r.del_flag = '0'
+	AND p.del_flag = '0'
+	</select>
+	
+	<insert id="saveRecord">
+		INSERT INTO s_pm_record(
+			id, 
+			name,
+			orgID, 
+			applicationTime, 
+			activistTime, 
+			objectTime, 
+			reserveTime, 
+			formalTime,  
+			stage, 
+			reviewer_id, 
+			create_by, 
+			create_Date, 
+			update_by,
+			update_Date, 
+			user_id,
+			del_flag,
+			makeup_flag,
+			end_flag,
+			makenode
+		) VALUES (
+			#{id}, 
+			#{name},
+			#{orgID}, 
+			#{applicationTime}, 
+			#{activistTime}, 
+			#{objectTime}, 
+			#{reserveTime}, 
+			#{formalTime}, 
+			#{stage}, 
+			#{reviewerID}, 
+			#{createby}, 
+			#{createDate}, 
+			#{updateby},
+			#{updateDate}, 
+			#{userID},
+			#{delflag},
+			#{makeupflag},
+			#{endflag},
+			#{makenode}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE s_pm_record SET
+			name=#{name},
+			orgID=#{orgID}, 
+			applicationTime=#{applicationTime}, 
+			activistTime=#{activistTime}, 
+			objectTime=#{objectTime}, 
+			reserveTime=#{reserveTime}, 
+			formalTime=#{formalTime},  
+			stage=#{stage}, 
+			reviewer_id=#{reviewerID}, 
+			create_by=#{createby}, 
+			create_Date=#{createDate}, 
+			update_by=#{updateby},
+			update_Date=#{updateDate}, 
+			user_id=#{userID},
+			del_flag=#{delflag},
+			makeup_flag=#{makeupflag},
+			end_flag=#{endflag},
+			makenode=#{makenode}
+		WHERE id = #{id}
+	</update>
+
+
+	<select id="findByUserID" resultType="String">
+		SELECT
+			r.id
+		FROM s_pm_record a
+		LEFT JOIN s_pm_process_data r ON r.app_id = a.id
+		WHERE a.user_id = #{0}
+		AND r.node = #{1}
+		AND a.del_flag = '0'
+		AND r.del_flag = '0'
+	</select>
+	
+	<select id="findOne" resultMap="DQRecordMap">
+	SELECT
+		<include refid="recordColumns"/>
+	FROM s_pm_record a
+	WHERE a.user_id = #{userID}
+	AND a.del_flag = '0'
+	</select>
+	
+	<select id="seckUserID" resultType="String">
+	SELECT u.id 
+	FROM s_pm_record a
+    LEFT JOIN sys_user u ON u.office_id = a.orgid
+    LEFT JOIN sys_user_role p ON p.user_id = u.id
+    LEFT JOIN sys_role r ON r.id = p.role_id
+    WHERE a.id = #{0} 
+    AND r.id = #{1}
+    AND a.del_flag = '0'
+    AND u.del_flag = '0'
+ 	AND r.del_flag = '0'
+	</select>
+	
+</mapper>

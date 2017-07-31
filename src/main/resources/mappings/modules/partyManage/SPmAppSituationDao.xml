@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.partyManage.dao.SPmAppSituationDao">
+    
+	<sql id="sPmAppSituationColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.update_by AS "updateBy.id",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.political_outlook AS "politicalOutlook",
+		a.jion_time AS "jionTime",
+		a.old_post AS "oldPost",
+		a.jion_app_time AS "jionAppTime",
+		a.development_type AS "developmentType",
+		a.reward_punishment_situation AS "rewardPunishmentSituation",
+		a.now_performance AS "nowPerformance",
+		a.jion_contacts AS "jionContacts",
+		a.activist_time AS "activistTime",
+		a.development_time AS "developmentTime",
+		a.whether_historical AS "whetherHistorical",
+		a.historical_app_time AS "historicalAppTime",
+		a.preparation_member_time AS "preparationMemberTime",
+		a.historical_app_num AS "historicalAppNum",
+		a.operator AS "operator",
+		a.operator_time AS "operatorTime",
+		a.pro_id AS "proId"
+	</sql>
+	
+	<sql id="sPmAppSituationJoins">
+	</sql>
+    
+	<select id="get" resultType="SPmAppSituation">
+		SELECT 
+			<include refid="sPmAppSituationColumns"/>
+		FROM s_pm_app_situation a
+		<include refid="sPmAppSituationJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="getByproId" resultType="SPmAppSituation">
+		SELECT
+		<include refid="sPmAppSituationColumns"/>
+		FROM s_pm_app_situation a
+		<include refid="sPmAppSituationJoins"/>
+		WHERE a.pro_id = #{proId}
+		AND a.del_flag = '0'
+	</select>
+	
+	<select id="findList" resultType="SPmAppSituation">
+		SELECT 
+			<include refid="sPmAppSituationColumns"/>
+		FROM s_pm_app_situation a
+		<include refid="sPmAppSituationJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SPmAppSituation">
+		SELECT 
+			<include refid="sPmAppSituationColumns"/>
+		FROM s_pm_app_situation a
+		<include refid="sPmAppSituationJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO s_pm_app_situation(
+			id,
+			create_by,
+			update_by,
+			create_date,
+			update_date,
+			remarks,
+			del_flag,
+			political_outlook,
+			jion_time,
+			old_post,
+			jion_app_time,
+			development_type,
+			reward_punishment_situation,
+			now_performance,
+			jion_contacts,
+			activist_time,
+			development_time,
+			whether_historical,
+			historical_app_time,
+			preparation_member_time,
+			historical_app_num,
+			operator,
+			operator_time,
+			pro_id
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{updateBy.id},
+			#{createDate},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{politicalOutlook},
+			#{jionTime},
+			#{oldPost},
+			#{jionAppTime},
+			#{developmentType},
+			#{rewardPunishmentSituation},
+			#{nowPerformance},
+			#{jionContacts},
+			#{activistTime},
+			#{developmentTime},
+			#{whetherHistorical},
+			#{historicalAppTime},
+			#{preparationMemberTime},
+			#{historicalAppNum},
+			#{operator},
+			#{operatorTime},
+			#{proId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE s_pm_app_situation SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			political_outlook = #{politicalOutlook},
+			jion_time = #{jionTime},
+			old_post = #{oldPost},
+			jion_app_time = #{jionAppTime},
+			development_type = #{developmentType},
+			reward_punishment_situation = #{rewardPunishmentSituation},
+			now_performance = #{nowPerformance},
+			jion_contacts = #{jionContacts},
+			activist_time = #{activistTime},
+			development_time = #{developmentTime},
+			whether_historical = #{whetherHistorical},
+			historical_app_time = #{historicalAppTime},
+			preparation_member_time = #{preparationMemberTime},
+			historical_app_num = #{historicalAppNum},
+			operator = #{operator},
+			operator_time = #{operatorTime},
+			pro_id = #{proId}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE s_pm_app_situation SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.partyManage.dao.SPmPmsSDao">
+    
+	<sql id="sPmPmsSColumns">
+		a.id AS "id",
+		a.party_branch AS "partyBranch",
+		a.rec_time AS "recTime",
+		a.name AS "name",
+		a.arr_num AS "arrNum",
+		a.act_num AS "actNum",
+		a.valid_vote AS "validVote",
+		a.consent_vote AS "consentVote",
+		a.different_vote AS "differentVote",
+		a.abstention AS "abstention",
+		a.sta_sign AS "staSign",
+		a.scr_sign AS "scrSign",
+		a.bran_sign AS "branSign",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.pro_id AS "proId"
+	</sql>
+	
+	<sql id="sPmPmsSJoins">
+	</sql>
+    
+	<select id="get" resultType="SPmPmsS">
+		SELECT 
+			<include refid="sPmPmsSColumns"/>
+		FROM s_pm_pms_s a
+		<include refid="sPmPmsSJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SPmPmsS">
+		SELECT 
+			<include refid="sPmPmsSColumns"/>
+		FROM s_pm_pms_s a
+		<include refid="sPmPmsSJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SPmPmsS">
+		SELECT 
+			<include refid="sPmPmsSColumns"/>
+		FROM s_pm_pms_s a
+		<include refid="sPmPmsSJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="getByproId" resultType="SPmPmsS">
+		SELECT
+		<include refid="sPmPmsSColumns"/>
+		FROM s_pm_pms_s a
+		WHERE a.pro_id = #{proId}
+		AND a.del_flag = '0'
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO s_pm_pms_s(
+			id,
+			party_branch,
+			rec_time,
+			name,
+			arr_num,
+			act_num,
+			valid_vote,
+			consent_vote,
+			different_vote,
+			abstention,
+			sta_sign,
+			scr_sign,
+			bran_sign,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			pro_id
+		) VALUES (
+			#{id},
+			#{partyBranch},
+			#{recTime},
+			#{name},
+			#{arrNum},
+			#{actNum},
+			#{validVote},
+			#{consentVote},
+			#{differentVote},
+			#{abstention},
+			#{staSign},
+			#{scrSign},
+			#{branSign},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{proId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE s_pm_pms_s SET 	
+			party_branch = #{partyBranch},
+			rec_time = #{recTime},
+			name = #{name},
+			arr_num = #{arrNum},
+			act_num = #{actNum},
+			valid_vote = #{validVote},
+			consent_vote = #{consentVote},
+			different_vote = #{differentVote},
+			abstention = #{abstention},
+			sta_sign = #{staSign},
+			scr_sign = #{scrSign},
+			bran_sign = #{branSign},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			pro_id = #{proId}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE s_pm_pms_s SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

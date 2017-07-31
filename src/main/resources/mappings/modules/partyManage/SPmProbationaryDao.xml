@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.partyManage.dao.SPmProbationaryDao">
+
+	<sql id="sPmProbationaryColumns">
+		a.id AS "id",
+		a.name AS "name",
+		a.sex AS "sex",
+		a.pla_of AS "plaOf",
+		a.date_birth AS "dateBirth",
+		a.nation AS "nation",
+		a.deg_edu AS "degEdu",
+		a.join_time AS "joinTime",
+		a.apca_time AS "apcaTime",
+		a.incumbent AS "incumbent",
+		a.situation AS "situation",
+		a.introducer AS "introducer",
+		a.party_group AS "partyGroup",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.pro_id AS "proId",
+		a.type AS "type"
+	</sql>
+
+	<sql id="sPmProbationaryJoins">
+	</sql>
+
+	<select id="get" resultType="SPmProbationary">
+		SELECT
+		<include refid="sPmProbationaryColumns"/>
+		FROM s_pm_probationary a
+		<include refid="sPmProbationaryJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="SPmProbationary">
+		SELECT
+		<include refid="sPmProbationaryColumns"/>
+		FROM s_pm_probationary a
+		<include refid="sPmProbationaryJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="name != null and name != ''">
+				AND a.name LIKE
+				<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="SPmProbationary">
+		SELECT
+		<include refid="sPmProbationaryColumns"/>
+		FROM s_pm_probationary a
+		<include refid="sPmProbationaryJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="getByproId" resultType="SPmProbationary">
+		SELECT
+		<include refid="sPmProbationaryColumns"/>
+		FROM s_pm_probationary a
+		WHERE a.pro_id = #{proId}
+		AND a.del_flag = '0'
+	</select>
+
+	<select id="getByProIdType" resultType="SPmProbationary" parameterType="java.lang.String">
+		SELECT
+		<include refid="sPmProbationaryColumns"/>
+		FROM s_pm_probationary a
+		WHERE a.pro_id = #{proId}
+		AND a.del_flag = '0'
+		and a.type = #{type}
+	</select>
+
+	<insert id="insert">
+		INSERT INTO s_pm_probationary(
+			id,
+			name,
+			sex,
+			pla_of,
+			date_birth,
+			nation,
+			deg_edu,
+			join_time,
+			apca_time,
+			incumbent,
+			situation,
+			introducer,
+			party_group,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			pro_id,
+			type
+		) VALUES (
+			#{id},
+			#{name},
+			#{sex},
+			#{plaOf},
+			#{dateBirth},
+			#{nation},
+			#{degEdu},
+			#{joinTime},
+			#{apcaTime},
+			#{incumbent},
+			#{situation},
+			#{introducer},
+			#{partyGroup},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{proId},
+			#{type}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE s_pm_probationary SET 	
+			name = #{name},
+			sex = #{sex},
+			pla_of = #{plaOf},
+			date_birth = #{dateBirth},
+			nation = #{nation},
+			deg_edu = #{degEdu},
+			join_time = #{joinTime},
+			apca_time = #{apcaTime},
+			incumbent = #{incumbent},
+			situation = #{situation},
+			introducer = #{introducer},
+			party_group = #{partyGroup},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			pro_id = #{proId},
+			type = #{type}
+		WHERE id = #{id}
+	</update>
+
+	<update id="delete">
+		UPDATE s_pm_probationary SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+</mapper>

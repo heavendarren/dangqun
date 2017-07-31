@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.partyManage.dao.SPmCheckDao">
+    
+	<sql id="sPmCheckColumns">
+		a.id AS "id",
+		a.name AS "name",
+		a.sex AS "sex",
+		a.date_birth AS "dateBirth",
+		a.apca_time AS "apcaTime",
+		a.incumbent AS "incumbent",
+		a.political AS "political",
+		a.abide_law AS "abideLaw",
+		a.problem AS "problem",
+		a.branch_opinion AS "branchOpinion",
+		a.party_opinion AS "partyOpinion",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.pro_id AS "proId"
+	</sql>
+	
+	<sql id="sPmCheckJoins">
+	</sql>
+    
+	<select id="get" resultType="SPmCheck">
+		SELECT 
+			<include refid="sPmCheckColumns"/>
+		FROM s_pm_check a
+		<include refid="sPmCheckJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SPmCheck">
+		SELECT 
+			<include refid="sPmCheckColumns"/>
+		FROM s_pm_check a
+		<include refid="sPmCheckJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SPmCheck">
+		SELECT 
+			<include refid="sPmCheckColumns"/>
+		FROM s_pm_check a
+		<include refid="sPmCheckJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="getByproId" resultType="SPmCheck">
+		SELECT
+		<include refid="sPmCheckColumns"/>
+		FROM s_pm_check a
+		WHERE a.pro_id = #{proId}
+		AND a.del_flag = '0'
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO s_pm_check(
+			id,
+			name,
+			sex,
+			date_birth,
+			apca_time,
+			incumbent,
+			political,
+			abide_law,
+			problem,
+			branch_opinion,
+			party_opinion,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			pro_id
+		) VALUES (
+			#{id},
+			#{name},
+			#{sex},
+			#{dateBirth},
+			#{apcaTime},
+			#{incumbent},
+			#{political},
+			#{abideLaw},
+			#{problem},
+			#{branchOpinion},
+			#{partyOpinion},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{proId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE s_pm_check SET 	
+			name = #{name},
+			sex = #{sex},
+			date_birth = #{dateBirth},
+			apca_time = #{apcaTime},
+			incumbent = #{incumbent},
+			political = #{political},
+			abide_law = #{abideLaw},
+			problem = #{problem},
+			branch_opinion = #{branchOpinion},
+			party_opinion = #{partyOpinion},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			pro_id = #{proId}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE s_pm_check SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

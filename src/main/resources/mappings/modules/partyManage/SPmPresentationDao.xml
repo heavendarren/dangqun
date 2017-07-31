@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.partyManage.dao.SPmPresentationDao">
+    
+	<sql id="sPmPresentationColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.revise_flag AS "reviseFlag",
+		a.pro_id AS "proId"
+	</sql>
+	
+	<sql id="sPmPresentationJoins">
+	</sql>
+    
+	<select id="get" resultType="SPmPresentation">
+		SELECT 
+			<include refid="sPmPresentationColumns"/>
+		FROM s_pm_presentation a
+		<include refid="sPmPresentationJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="getByproId" resultType="SPmPresentation">
+		SELECT
+		<include refid="sPmPresentationColumns"/>
+		FROM s_pm_presentation a
+		<include refid="sPmPresentationJoins"/>
+		 WHERE a.pro_id = #{proId}
+         AND a.del_flag = '0'
+	</select>
+	
+	<select id="findList" resultType="SPmPresentation">
+		SELECT 
+			<include refid="sPmPresentationColumns"/>
+		FROM s_pm_presentation a
+		<include refid="sPmPresentationJoins"/>
+		<where>
+			a.del_flag = '0'
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findLists" resultType="SPmPresentation">
+		SELECT 
+			<include refid="sPmPresentationColumns"/>
+		FROM s_pm_presentation a
+		<include refid="sPmPresentationJoins"/>
+		<where>
+			a.del_flag = '0'
+			AND a.pro_id = #{proId}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- custom method findJoinList  -->
+	<select id="findJoinList" resultType="SPmJionFiles">
+		SELECT 
+			s.*
+		FROM s_pm_presentation a left join S_PM_JION_FILES s
+		on a.id = s.form_id
+		<include refid="sPmPresentationJoins"/>
+		<where>
+			s .del_flag = '0' AND a .del_flag = '0'
+			and s.CREATE_BY = #{formId}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SPmPresentation">
+		SELECT 
+			<include refid="sPmPresentationColumns"/>
+		FROM s_pm_presentation a
+		<include refid="sPmPresentationJoins"/>
+		<where>
+			a.del_flag = '0'
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO s_pm_presentation(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			revise_flag,
+			pro_id
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{reviseFlag},
+			#{proId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE s_pm_presentation SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE s_pm_presentation SET 
+			del_flag = '1'
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

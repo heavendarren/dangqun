@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.partyManage.dao.SPmPbDao">
+    
+	<sql id="sPmPbColumns">
+		a.id AS "id",
+		a.pro_id AS "proId",
+		a.con_top AS "conTop",
+		a.con_time AS "conTime",
+		a.place AS "place",
+		a.host AS "host",
+		a.note_taker AS "noteTaker",
+		a.per_par AS "perPar",
+		a.per_att AS "perAtt",
+		a.arr_num AS "arrNum",
+		a.act_num AS "actNum",
+		a.atten_list AS "attenList",
+		a.abs_list AS "absList",
+		a.meet_min AS "meetMin",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="sPmPbJoins">
+	</sql>
+    
+	<select id="get" resultType="SPmPb">
+		SELECT 
+			<include refid="sPmPbColumns"/>
+		FROM s_pm_pb a
+		<include refid="sPmPbJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SPmPb">
+		SELECT 
+			<include refid="sPmPbColumns"/>
+		FROM s_pm_pb a
+		<include refid="sPmPbJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SPmPb">
+		SELECT 
+			<include refid="sPmPbColumns"/>
+		FROM s_pm_pb a
+		<include refid="sPmPbJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="getByproId" resultType="SPmPb">
+		SELECT
+		<include refid="sPmPbColumns"/>
+		FROM s_pm_pb a
+		WHERE a.pro_id = #{proId}
+		AND a.del_flag = '0'
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO s_pm_pb(
+			id,
+			pro_id,
+			con_top,
+			con_time,
+			place,
+			host,
+			note_taker,
+			per_par,
+			per_att,
+			arr_num,
+			act_num,
+			atten_list,
+			abs_list,
+			meet_min,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{proId},
+			#{conTop},
+			#{conTime},
+			#{place},
+			#{host},
+			#{noteTaker},
+			#{perPar},
+			#{perAtt},
+			#{arrNum},
+			#{actNum},
+			#{attenList},
+			#{absList},
+			#{meetMin},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE s_pm_pb SET 	
+			pro_id = #{proId},
+			con_top = #{conTop},
+			con_time = #{conTime},
+			place = #{place},
+			host = #{host},
+			note_taker = #{noteTaker},
+			per_par = #{perPar},
+			per_att = #{perAtt},
+			arr_num = #{arrNum},
+			act_num = #{actNum},
+			atten_list = #{attenList},
+			abs_list = #{absList},
+			meet_min = #{meetMin},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE s_pm_pb SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

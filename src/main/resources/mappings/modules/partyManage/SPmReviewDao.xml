@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.partyManage.dao.SPmReviewDao">
+    
+	<sql id="sPmReviewColumns">
+		a.id AS "id",
+		a.name AS "name",
+		a.sex AS "sex",
+		a.nation AS "nation",
+		a.date_birth AS "dateBirth",
+		a.degree AS "degree",
+		a.work_hours AS "workHours",
+		a.party_time AS "partyTime",
+		a.object_time AS "objectTime",
+		a.activist_time AS "activistTime",
+		a.short_time AS "shortTime",
+		a.bran_opin AS "branOpin",
+		a.gen_opin AS "genOpin",
+		a.party_opin AS "partyOpin",
+		a.trial AS "trial",
+		a.collar AS "collar",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_update AS "updateUpdate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.pro_id AS "proId"
+	</sql>
+	
+	<sql id="sPmReviewJoins">
+	</sql>
+    
+	<select id="get" resultType="SPmReview">
+		SELECT 
+			<include refid="sPmReviewColumns"/>
+		FROM s_pm_review a
+		<include refid="sPmReviewJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SPmReview">
+		SELECT 
+			<include refid="sPmReviewColumns"/>
+		FROM s_pm_review a
+		<include refid="sPmReviewJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SPmReview">
+		SELECT 
+			<include refid="sPmReviewColumns"/>
+		FROM s_pm_review a
+		<include refid="sPmReviewJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="getByproId" resultType="SPmReview">
+		SELECT
+		<include refid="sPmReviewColumns"/>
+		FROM s_pm_review a
+		WHERE a.pro_id = #{proId}
+		AND a.del_flag = '0'
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO s_pm_review(
+			id,
+			name,
+			sex,
+			nation,
+			date_birth,
+			degree,
+			work_hours,
+			party_time,
+			object_time,
+			activist_time,
+			short_time,
+			bran_opin,
+			gen_opin,
+			party_opin,
+			trial,
+			collar,
+			create_by,
+			create_date,
+			update_by,
+			update_update,
+			remarks,
+			del_flag,
+			pro_id
+		) VALUES (
+			#{id},
+			#{name},
+			#{sex},
+			#{nation},
+			#{dateBirth},
+			#{degree},
+			#{workHours},
+			#{partyTime},
+			#{objectTime},
+			#{activistTime},
+			#{shortTime},
+			#{branOpin},
+			#{genOpin},
+			#{partyOpin},
+			#{trial},
+			#{collar},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateUpdate},
+			#{remarks},
+			#{delFlag},
+			#{proId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE s_pm_review SET 	
+			name = #{name},
+			sex = #{sex},
+			nation = #{nation},
+			date_birth = #{dateBirth},
+			degree = #{degree},
+			work_hours = #{workHours},
+			party_time = #{partyTime},
+			object_time = #{objectTime},
+			activist_time = #{activistTime},
+			short_time = #{shortTime},
+			bran_opin = #{branOpin},
+			gen_opin = #{genOpin},
+			party_opin = #{partyOpin},
+			trial = #{trial},
+			collar = #{collar},
+			update_by = #{updateBy.id},
+			update_update = #{updateUpdate},
+			remarks = #{remarks},
+			pro_id = #{proId}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE s_pm_review SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

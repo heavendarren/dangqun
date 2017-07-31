@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.partyManage.dao.SPmPmsDao">
+    
+	<sql id="sPmPmsColumns">
+		a.id AS "id",
+		a.rec_time AS "recTime",
+		a.rec_loca AS "recLoca",
+		a.tno_pm AS "tnoPm",
+		a.num_pm AS "numPm",
+		a.lssue_rec AS "lssueRec",
+		a.take_rec AS "takeRec",
+		a.valid_vote AS "validVote",
+		a.invalid_ball AS "invalidBall",
+		a.result_rec AS "resultRec",
+		a.sta_sign AS "staSign",
+		a.scr_sign AS "scrSign",
+		a.bran_sign AS "branSign",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.pro_id AS "proId"
+	</sql>
+	
+	<sql id="sPmPmsJoins">
+	</sql>
+    
+	<select id="get" resultType="SPmPms">
+		SELECT 
+			<include refid="sPmPmsColumns"/>
+		FROM s_pm_pms a
+		<include refid="sPmPmsJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SPmPms">
+		SELECT 
+			<include refid="sPmPmsColumns"/>
+		FROM s_pm_pms a
+		<include refid="sPmPmsJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SPmPms">
+		SELECT 
+			<include refid="sPmPmsColumns"/>
+		FROM s_pm_pms a
+		<include refid="sPmPmsJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="getByproId" resultType="SPmPms">
+		SELECT
+		<include refid="sPmPmsColumns"/>
+		FROM s_pm_pms a
+		WHERE a.pro_id = #{proId}
+		AND a.del_flag = '0'
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO s_pm_pms(
+			id,
+			rec_time,
+			rec_loca,
+			tno_pm,
+			num_pm,
+			lssue_rec,
+			take_rec,
+			valid_vote,
+			invalid_ball,
+			result_rec,
+			sta_sign,
+			scr_sign,
+			bran_sign,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			pro_id
+		) VALUES (
+			#{id},
+			#{recTime},
+			#{recLoca},
+			#{tnoPm},
+			#{numPm},
+			#{lssueRec},
+			#{takeRec},
+			#{validVote},
+			#{invalidBall},
+			#{resultRec},
+			#{staSign},
+			#{scrSign},
+			#{branSign},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{proId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE s_pm_pms SET 	
+			rec_time = #{recTime},
+			rec_loca = #{recLoca},
+			tno_pm = #{tnoPm},
+			num_pm = #{numPm},
+			lssue_rec = #{lssueRec},
+			take_rec = #{takeRec},
+			valid_vote = #{validVote},
+			invalid_ball = #{invalidBall},
+			result_rec = #{resultRec},
+			sta_sign = #{staSign},
+			scr_sign = #{scrSign},
+			bran_sign = #{branSign},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			pro_id = #{proId}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE s_pm_pms SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

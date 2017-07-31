@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.partyManage.dao.SPmFamilyDao">
+    
+	<sql id="sPmFamilyColumns">
+		a.id AS "id",
+		a.name AS "name",
+		a.sex AS "sex",
+		a.birth_date AS "birthDate",
+		a.pol_look AS "polLook",
+		a.work_pos AS "workPos",
+		a.identity AS "identity",
+		a.rel_cate AS "relCate",
+		a.rel_we AS "relWe",
+		a.entry_peo AS "entryPeo",
+		a.entry_date AS "entryDate",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.pro_id AS "proId"
+	</sql>
+	
+	<sql id="sPmFamilyJoins">
+	</sql>
+    
+	<select id="get" resultType="SPmFamily">
+		SELECT 
+			<include refid="sPmFamilyColumns"/>
+		FROM s_pm_family a
+		<include refid="sPmFamilyJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SPmFamily">
+		SELECT 
+			<include refid="sPmFamilyColumns"/>
+		FROM s_pm_family a
+		<include refid="sPmFamilyJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findLists" resultType="SPmFamily">
+		SELECT
+		<include refid="sPmFamilyColumns"/>
+		FROM s_pm_family a
+		<include refid="sPmFamilyJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			AND a.pro_id = #{proId}
+			<if test="name != null and name != ''">
+				AND a.name LIKE
+				<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SPmFamily">
+		SELECT 
+			<include refid="sPmFamilyColumns"/>
+		FROM s_pm_family a
+		<include refid="sPmFamilyJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO s_pm_family(
+			id,
+			name,
+			sex,
+			birth_date,
+			pol_look,
+			work_pos,
+			identity,
+			rel_cate,
+			rel_we,
+			entry_peo,
+			entry_date,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			pro_id
+		) VALUES (
+			#{id},
+			#{name},
+			#{sex},
+			#{birthDate},
+			#{polLook},
+			#{workPos},
+			#{identity},
+			#{relCate},
+			#{relWe},
+			#{entryPeo},
+			#{entryDate},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{proId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE s_pm_family SET 	
+			name = #{name},
+			sex = #{sex},
+			birth_date = #{birthDate},
+			pol_look = #{polLook},
+			work_pos = #{workPos},
+			identity = #{identity},
+			rel_cate = #{relCate},
+			rel_we = #{relWe},
+			entry_peo = #{entryPeo},
+			entry_date = #{entryDate},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			pro_id = #{proId}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE s_pm_family SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
